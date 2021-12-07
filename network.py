@@ -1,12 +1,13 @@
 import numpy as np
 
 
-# i - all inputs
-# nhl - neurons in hidden layer
-# nol - neurons in output layer
-# y - all outputs mapped to inputs
 class NN:
     def __init__(self, i, nhl, y):
+        """
+        :param i: all inputs
+        :param nhl: eurons in hidden layer
+        :param y: all outputs mapped to inputs
+        """
         self.input = i
         self.y = y
 
@@ -64,9 +65,10 @@ if __name__ == '__main__':
     inputs = np.array([[0, 0, 0], [0, 1, 0], [1, 0, 0], [1, 1, 0]])
     results = np.array([[0], [1], [1], [0]])
 
-    nn = NN(inputs, 4, results)
-    for _ in range(100):
+    nn = NN(inputs, nhl=4, y=results)
+    for _ in range(10000):
         nn.feedforward()
         nn.backprop()
 
+    print("finální output po učení")
     print(nn.output)
