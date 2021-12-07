@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def sigmoid(x):
@@ -19,9 +20,10 @@ class NN:
         self.input = i
         self.y = y
         self.output = np.zeros(self.y.shape)
-        # weights default 1
-        self.w1 = np.ones((len(i[0]), nhl))  # 3x4 matrix
-        self.w2 = np.ones((nhl, 1))  # 4x1 matrix
+
+        # weights random!
+        self.w1 = np.random.rand(self.input.shape[1], 4)
+        self.w2 = np.random.rand(4, 1)
 
     def feedforward(self):
         self.layer1 = sigmoid(self.input @ self.w1)  # 4x4 matrix
@@ -34,10 +36,11 @@ class NN:
 
         d_weights2 = self.layer1.T @ (error * derivative1)  # 4x1 matrix
 
-        d_weights1 = self.input.T @ (error * derivative1 @ self.w2.T * derivative2)
+        d_weights1 = self.input.T @ (((error * derivative1) @ self.w2.T) * derivative2)
 
         self.w1 += d_weights1
         self.w2 += d_weights2
+        return abs(np.mean(error))
 
 
 if __name__ == '__main__':
@@ -45,10 +48,14 @@ if __name__ == '__main__':
     inputs = np.array([[0, 0, 0], [0, 1, 0], [1, 0, 0], [1, 1, 0]])
     results = np.array([[0], [1], [1], [0]])
 
+    errors = []
     nn = NN(inputs, nhl=4, y=results)
-    for _ in range(10000):
+    for _ in range(180):
         nn.feedforward()
-        nn.backprop()
+        err = nn.backprop()
+        errors.append(err)
 
     print("finální output po učení")
     print(nn.output)
+    plt.plot(range(len(errors)), errors)
+    plt.show()
